@@ -20,7 +20,7 @@
 
 #include "opcodes_handlers.h"
 
-#define BUFFER_LEN 40
+#define BUFFER_LEN 11
 
 char *opname(zend_uchar opcode){
 	switch(opcode) {
@@ -160,27 +160,28 @@ char *opname(zend_uchar opcode){
 char *format_zval(zval *z)
 {
 	static char buffer[BUFFER_LEN];
-	//int len;
 
 	switch(z->type) {
 		case IS_NULL:
 			return "NULL";
 		case IS_LONG:
 		case IS_BOOL:
-			snprintf(buffer, BUFFER_LEN, "%d", z->value.lval);
+			snprintf(buffer, BUFFER_LEN, "%5d", z->value.lval);
 			return buffer;
 		case IS_DOUBLE:
-			snprintf(buffer, BUFFER_LEN, "%f", z->value.dval);
+			snprintf(buffer, BUFFER_LEN, "%5f", z->value.dval);
 			return buffer;
 		case IS_STRING:
-			snprintf(buffer, BUFFER_LEN, "\"%s\"", z->value.str.val);
+		case IS_CONSTANT:
+			snprintf(buffer, BUFFER_LEN, "\"%5s\"", z->value.str.val);
 			return buffer;
 		case IS_ARRAY:
-		case IS_OBJECT:
-		case IS_RESOURCE:
-		case IS_CONSTANT:
 		case IS_CONSTANT_ARRAY:
-			return "";
+			return "Array";
+		case IS_OBJECT:
+            return "Object";
+		case IS_RESOURCE:
+            return "Resource";
 		default:
 			return "unknown";
 	}
@@ -223,7 +224,7 @@ void dump_op_array(zend_op_array *op_array){
         char *buf;
         char *top;
 		memset(memset((buf=malloc(116))+115, 0, 1)-115, '=', 115);
-		memset(memset((top=malloc(116))+115, 0, 1)-115, '*', 115);
+		memset(memset((top=malloc(116))+115, 0, 1)-115, '-', 115);
 		printf("%s\n",top);
 		printf("%6s|%6s|%20s|%50s|%10s|%10s|%6s|\n", "opnum", "line", "opcode", "op_handler", "op1", "op2", "result");
 		printf("%.6s|%.6s|%.20s|%.50s|%.10s|%.10s|%.6s|\n", buf, buf, buf, buf, buf, buf,buf);
