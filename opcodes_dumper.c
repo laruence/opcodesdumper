@@ -209,7 +209,7 @@ char * format_znode(znode *n){
 }
 
 void dump_op(zend_op *op, int num){
-	printf("%6d|%6d|%20s|%50s|%10s|%10s|%6s|\n", num, op->lineno,
+	printf("%6d|%6d|%25s|%45s|%10s|%10s|%6s|\n", num, op->lineno,
 			opname(op->opcode),
             get_handler(op),
 			format_znode(&op->op1),
@@ -219,15 +219,15 @@ void dump_op(zend_op *op, int num){
 
 void dump_op_array(zend_op_array *op_array){
 	if(op_array) {
-        //TOPO format output ... >_<
+        /* @TODO format output ... >_< */
 		int i;
         char *buf;
         char *top;
-		memset(memset((buf=malloc(116))+115, 0, 1)-115, '=', 115);
+		memset(memset((buf=malloc(116))+115, 0, 1)-115, '-', 115);
 		memset(memset((top=malloc(116))+115, 0, 1)-115, '-', 115);
 		printf("%s\n",top);
-		printf("%6s|%6s|%20s|%50s|%10s|%10s|%6s|\n", "opnum", "line", "opcode", "op_handler", "op1", "op2", "result");
-		printf("%.6s|%.6s|%.20s|%.50s|%.10s|%.10s|%.6s|\n", buf, buf, buf, buf, buf, buf,buf);
+		printf("%6s|%6s|%25s|%45s|%10s|%10s|%6s|\n", "opnum", "line", "opcode", "op_handler", "op1", "op2", "result");
+		printf("%.6s|%.6s|%.25s|%.45s|%.10s|%.10s|%.6s|\n", buf, buf, buf, buf, buf, buf, buf);
 		for(i = 0; i < op_array->last; i++) {
 			dump_op(&op_array->opcodes[i], i);
 		}
@@ -242,7 +242,7 @@ int main(int argc, char **argv){
 	zend_file_handle file_handle;
 
 	if(argc != 2) {
-		printf("usage:  op_dumper <script>\n");
+		printf("usage:  op_dumper <php script>\n");
 		return 1;
 	}
 	PHP_EMBED_START_BLOCK(argc, argv);
@@ -256,10 +256,18 @@ int main(int argc, char **argv){
 		printf("Error parsing script: %s\n", file_handle.filename);
 		return 1;
 	}
-	//printf(" %s\n", EX(opline));
 	dump_op_array(op_array);
     destroy_op_array(op_array TSRMLS_CC);
     efree(op_array);
 	PHP_EMBED_END_BLOCK();
 	return 0;
 }
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * c-basic-offset: 4
+ * End:
+ * vim600: noet sw=4 ts=4 fdm=marker
+ * vim<600: noet sw=4 ts=4
+ */
