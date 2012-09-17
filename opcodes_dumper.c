@@ -244,7 +244,7 @@ int main(int argc, char **argv){
 		printf("usage:  op_dumper <script>\n");
 		return 1;
 	}
-	PHP_EMBED_START_BLOCK(argc,argv);
+	PHP_EMBED_START_BLOCK(argc, argv);
 	printf("Script: %s\n", argv[1]);
 	file_handle.filename = argv[1];
 	file_handle.free_filename = 0;
@@ -257,6 +257,8 @@ int main(int argc, char **argv){
 	}
 	//printf(" %s\n", EX(opline));
 	dump_op_array(op_array);
+    destroy_op_array(op_array TSRMLS_CC);
+    efree(op_array);
 	PHP_EMBED_END_BLOCK();
 	return 0;
 }
