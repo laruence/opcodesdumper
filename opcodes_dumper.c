@@ -166,14 +166,14 @@ char *format_zval(zval *z)
 			return "NULL";
 		case IS_LONG:
 		case IS_BOOL:
-			snprintf(buffer, BUFFER_LEN, "%5d", z->value.lval);
+			snprintf(buffer, BUFFER_LEN, "%d", z->value.lval);
 			return buffer;
 		case IS_DOUBLE:
-			snprintf(buffer, BUFFER_LEN, "%5f", z->value.dval);
+			snprintf(buffer, BUFFER_LEN, "%f", z->value.dval);
 			return buffer;
 		case IS_STRING:
 		case IS_CONSTANT:
-			snprintf(buffer, BUFFER_LEN, "\"%5s\"", z->value.str.val);
+			snprintf(buffer, BUFFER_LEN, "\"%s\"", z->value.str.val);
 			return buffer;
 		case IS_ARRAY:
 		case IS_CONSTANT_ARRAY:
