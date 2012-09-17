@@ -19,23 +19,15 @@ Opcodes Dumper
 ##安装示例
 
 ###1. 编译PHP源码：
+PHP需要在编译的时候支持embed
 
-    ./configure --prefix=/home/tony/php310 --enable-debug --enable-embed
-    make && make install
+###2. 执行make 
+```
+./configure --with-php-config=PATH/TO/php-config
+make && make install
+```
 
-###2. 复制PHP链接库：
-    
-    sudo cp /home/tony/php310/lib/libphp5.so /lib/libphp5.so
-
-###3. 修改Makefile中关于PHP路径的定义
-
-    (vi Makefile)
-    PHPPATH=/home/tony/php310
-
-###4. 执行make 
-
-###5. 测试
-
-    ./opd test.php
-
-
+###3. 测试
+```
+./opcodes_dumper test.php
+```
