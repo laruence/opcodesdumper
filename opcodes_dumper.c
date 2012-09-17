@@ -14,11 +14,13 @@
   +----------------------------------------------------------------------+
    $Id$
  */
+
 #include <stdio.h>
 #include "sapi/embed/php_embed.h"
-#include "opcode_handlers.h"
-#define BUFFER_LEN 40
 
+#include "opcodes_handlers.h"
+
+#define BUFFER_LEN 40
 
 char *opname(zend_uchar opcode){
 	switch(opcode) {

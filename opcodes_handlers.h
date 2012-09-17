@@ -15,14 +15,24 @@
    $Id$
  */
 
-#include <stdio.h>
-#include "sapi/embed/php_embed.h"
+#ifndef PHP_YAF_H
+#define PHP_YAF_H
 
-
-#define _CONST_CODE  0                                                                                                                                                                                                        
+#define _CONST_CODE  0                                                                                                                                                                                             
 #define _TMP_CODE    1
 #define _VAR_CODE    2
 #define _UNUSED_CODE 3
 #define _CV_CODE     4
 
 char * get_handler(zend_op* op);
+
+#endif
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * c-basic-offset: 4
+ * End:
+ * vim600: noet sw=4 ts=4 fdm=marker
+ * vim<600: noet sw=4 ts=4
+ */
