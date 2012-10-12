@@ -156,66 +156,77 @@ char *opname(zend_uchar opcode){
 		default: return "UNKNOWN"; break;
 	}
 }
-
-char *format_zval(zval *z)
+void format_zval(zval *z, char *buffer)
 {
-	static char buffer[BUFFER_LEN];
-
 	switch(z->type) {
 		case IS_NULL:
-			return "NULL";
+			snprintf(buffer, BUFFER_LEN, "%5s", "NULL");
+            break;
 		case IS_LONG:
 		case IS_BOOL:
-			snprintf(buffer, BUFFER_LEN, "%d", z->value.lval);
-			return buffer;
+			snprintf(buffer, BUFFER_LEN, "%5d", z->value.lval);
+            break;
 		case IS_DOUBLE:
-			snprintf(buffer, BUFFER_LEN, "%f", z->value.dval);
-			return buffer;
+			snprintf(buffer, BUFFER_LEN, "%5f", z->value.dval);
+            break;
 		case IS_STRING:
 		case IS_CONSTANT:
-			snprintf(buffer, BUFFER_LEN, "\"%s\"", z->value.str.val);
-			return buffer;
+            snprintf(buffer, BUFFER_LEN, "\"%5s\"", z->value.str.val);
+            break;
 		case IS_ARRAY:
 		case IS_CONSTANT_ARRAY:
-			return "Array";
+			snprintf(buffer, BUFFER_LEN,"%5s",  "Array");
+            break;
 		case IS_OBJECT:
-            return "Object";
+			snprintf(buffer, BUFFER_LEN,"%5s",  "Object");
+            break;
 		case IS_RESOURCE:
-            return "Resource";
+			snprintf(buffer, BUFFER_LEN,"%5s",  "Resource");
+            break;
 		default:
-			return "unknown";
+			snprintf(buffer, BUFFER_LEN,"%5s",  "unknown");
+            break;
 	}
 }
 
-char * format_znode(znode *n){
-	static char buffer[BUFFER_LEN];
+void format_znode(znode *n, char *buffer){
 
 	switch (n->op_type) {
 		case IS_CONST:
-			return format_zval(&n->u.constant);
+#if PHP_VERSION_ID >= 50399
+		format_zval(&n.zv, buffer);
+#else
+		format_zval(&n->u.constant, buffer);
+#endif
 			break;
 		case IS_VAR:
 			snprintf(buffer, BUFFER_LEN, "$%d",  n->u.var/sizeof(temp_variable));
-			return buffer;
 			break;
 		case IS_TMP_VAR:
 			snprintf(buffer, BUFFER_LEN, "~%d",  n->u.var/sizeof(temp_variable));
-			return buffer;
 			break;
 		default:
-			return "";
+            snprintf(buffer, BUFFER_LEN, "%S", "");
 			break;
 	}
 }
 
 void dump_op(zend_op *op, int num){
-	printf("%6d|%6d|%25s|%45s|%10s|%10s|%6s|\n", num, op->lineno,
+	static char buffer_op1[BUFFER_LEN];
+	static char buffer_op2[BUFFER_LEN];
+	static char buffer_result[BUFFER_LEN];
+    format_znode(&op->op1, buffer_op1);
+    format_znode(&op->op2, buffer_op2);
+    format_znode(&op->result, buffer_result);
+	printf("%6d|%6d|%20s|%50s|%10s|%10s|%6s|\n", num, op->lineno,
 			opname(op->opcode),
             get_handler(op),
-			format_znode(&op->op1),
-			format_znode(&op->op2),
-			format_znode(&op->result)) ;
+			buffer_op1,
+			buffer_op2,
+			buffer_result
+            ) ;
 }
+
 
 void dump_op_array(zend_op_array *op_array){
 	if(op_array) {
