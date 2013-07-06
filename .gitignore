@@ -1,0 +1,9 @@
+.deps/
+Makefile
+config.h
+config.log
+config.status
+opcodes_dumper
+opcodes_dumper.o
+opcodes_handlers.o
+stamp-h1
