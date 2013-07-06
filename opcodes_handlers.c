@@ -42,7 +42,7 @@ static int get_opcode_handler_index(zend_uchar opcode, zend_op* op)
         _CV_CODE      /* 16 = IS_CV     */
     }; 
 
-    return opcode * 25 + zend_vm_decode[op->op1.op_type] * 5 + zend_vm_decode[op->op2.op_type];
+    return opcode * 25 + zend_vm_decode[op->op1_type] * 5 + zend_vm_decode[op->op2_type];
 }
 
 const char * get_handler(zend_op* op){

@@ -189,24 +189,20 @@ void format_zval(zval *z, char *buffer)
 	}
 }
 
-void format_znode(znode *n, char *buffer){
+void format_znode(znode_op *n, zend_uchar type, char *buffer){
 
-	switch (n->op_type) {
+	switch (type) {
 		case IS_CONST:
-#if PHP_VERSION_ID >= 50399
-		format_zval(&n.zv, buffer);
-#else
-		format_zval(&n->u.constant, buffer);
-#endif
+			format_zval(n->zv, buffer);
 			break;
 		case IS_VAR:
-			snprintf(buffer, BUFFER_LEN, "$%d",  n->u.var/sizeof(temp_variable));
+			snprintf(buffer, BUFFER_LEN, "$%d",  n->var/sizeof(temp_variable));
 			break;
 		case IS_TMP_VAR:
-			snprintf(buffer, BUFFER_LEN, "~%d",  n->u.var/sizeof(temp_variable));
+			snprintf(buffer, BUFFER_LEN, "~%d",  n->var/sizeof(temp_variable));
 			break;
 		default:
-            snprintf(buffer, BUFFER_LEN, "%S", "");
+			snprintf(buffer, BUFFER_LEN, "%s", "");
 			break;
 	}
 }
@@ -215,10 +211,10 @@ void dump_op(zend_op *op, int num){
 	static char buffer_op1[BUFFER_LEN];
 	static char buffer_op2[BUFFER_LEN];
 	static char buffer_result[BUFFER_LEN];
-    format_znode(&op->op1, buffer_op1);
-    format_znode(&op->op2, buffer_op2);
-    format_znode(&op->result, buffer_result);
-	printf("%6d|%6d|%20s|%50s|%10s|%10s|%6s|\n", num, op->lineno,
+    format_znode(&op->op1, op->op1_type, buffer_op1);
+    format_znode(&op->op2, op->op2_type, buffer_op2);
+    format_znode(&op->result, op->result_type, buffer_result);
+	printf("%6d|%6d|%25s|%45s|%20s|%10s|%6s|\n", num, op->lineno,
 			opname(op->opcode),
             get_handler(op),
 			buffer_op1,
@@ -237,8 +233,8 @@ void dump_op_array(zend_op_array *op_array){
 		memset(memset((buf=malloc(116))+115, 0, 1)-115, '-', 115);
 		memset(memset((top=malloc(116))+115, 0, 1)-115, '-', 115);
 		printf("%s\n",top);
-		printf("%6s|%6s|%25s|%45s|%10s|%10s|%6s|\n", "opnum", "line", "opcode", "op_handler", "op1", "op2", "result");
-		printf("%.6s|%.6s|%.25s|%.45s|%.10s|%.10s|%.6s|\n", buf, buf, buf, buf, buf, buf, buf);
+		printf("%6s|%6s|%25s|%45s|%20s|%10s|%6s|\n", "opnum", "line", "opcode", "op_handler", "op1", "op2", "result");
+		printf("%.6s|%.6s|%.25s|%.45s|%.20s|%.10s|%.6s|\n", buf, buf, buf, buf, buf, buf, buf);
 		for(i = 0; i < op_array->last; i++) {
 			dump_op(&op_array->opcodes[i], i);
 		}
