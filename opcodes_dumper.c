@@ -20,7 +20,7 @@
 
 #include "opcodes_handlers.h"
 
-#define BUFFER_LEN 11
+#define BUFFER_LEN 21
 
 char *opname(zend_uchar opcode){
 	switch(opcode) {
@@ -230,8 +230,8 @@ void dump_op_array(zend_op_array *op_array){
 		int i;
         char *buf;
         char *top;
-		memset(memset((buf=malloc(116))+115, 0, 1)-115, '-', 115);
-		memset(memset((top=malloc(116))+115, 0, 1)-115, '-', 115);
+		memset(memset((buf=malloc(126))+125, 0, 1)-125, '-', 125);
+		memset(memset((top=malloc(126))+125, 0, 1)-125, '-', 125);
 		printf("%s\n",top);
 		printf("%6s|%6s|%25s|%45s|%20s|%10s|%6s|\n", "opnum", "line", "opcode", "op_handler", "op1", "op2", "result");
 		printf("%.6s|%.6s|%.25s|%.45s|%.20s|%.10s|%.6s|\n", buf, buf, buf, buf, buf, buf, buf);
